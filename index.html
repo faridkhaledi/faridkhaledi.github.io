@@ -37,22 +37,63 @@
         .business-card.is-flipped {
             transform: rotateY(180deg);
         }
-        /* Hover effect for DESKTOP users */
         @media (hover: hover) and (pointer: fine) {
             .business-card-container:hover .business-card:not(.is-flipped) {
                 transform: rotateY(180deg);
+            }
+             .business-card-container:hover .business-card.is-flipped {
+                transform: rotateY(0deg);
             }
             .business-card-container:hover {
                  transform: translateY(-5px);
                  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.2);
             }
         }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; padding: 20px; }
-        .card-front { background-color: #1a433a; color: #f0f0f0; z-index: 2; }
-        .card-back { background-color: #fdfdfd; color: #1a433a; transform: rotateY(180deg); }
+        .card-face { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            backface-visibility: hidden; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 20px; 
+        }
+        .card-front { 
+            background-color: #1a433a; 
+            color: #f0f0f0; 
+            z-index: 2; /* Front face is z-index 2 */
+        }
+        .card-back { 
+            background-color: #fdfdfd; 
+            color: #1a433a; 
+            transform: rotateY(180deg); 
+            z-index: 1; /* Back face is z-index 1 */
+        }
         .decorative-line { width: 50px; height: 3px; background-color: #d4af37; margin-top: 6px; margin-bottom: 12px; }
         .icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
-        .background-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); z-index: 1; }
+        
+        /* ROBUST FIX: Ensure background pattern is always behind content */
+        .background-pattern { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); 
+            z-index: 0; /* Set pattern to z-index 0 */
+        }
+        .card-content {
+            position: relative;
+            z-index: 1; /* Set content to z-index 1, guaranteeing it's on top of the pattern */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
         .vcard-button { margin-top: 24px; }
         .vcard-button button {
             background-color: #1a433a;
@@ -79,12 +120,13 @@
             <!-- Arabic Side (Front) -->
             <div class="card-face card-front font-vazir" dir="rtl">
                 <div class="background-pattern"></div>
-                <div class="relative z-10 flex flex-col h-full">
+                <!-- Content wrapper with z-index -->
+                <div class="card-content">
                     <div class="flex-grow break-words">
                         <h1 class="text-2xl font-extrabold text-white">سید مصطفی الحسینی</h1>
                         <div class="decorative-line"></div>
                         <h2 class="text-lg font-semibold text-gray-200">مستشار حلول حقن البلاستيك</h2>
-                        <p class="text-sm text-gray-300">تصمیم القوالب | خدمات الحقن | الاستشارات الفنیة</p>
+                        <p class="text-xs text-gray-300">تصمیم القوالب | خدمات الحقن | الاستشارات الفنیة | تأمین المواد الأولیة</p>
                     </div>
                     <div class="text-xs text-gray-200 space-y-1 break-words">
                         <a href="mailto:smh180001@gmail.com" class="flex items-center justify-end hover:text-white">
@@ -104,12 +146,13 @@
             <!-- English Side (Back) -->
             <div class="card-face card-back font-poppins" dir="ltr">
                  <div class="background-pattern"></div>
-                 <div class="relative z-10 flex flex-col h-full">
+                 <!-- Content wrapper with z-index -->
+                 <div class="card-content">
                     <div class="flex-grow break-words">
                         <h1 class="text-xl font-bold text-[#1a433a]">Sayed Mustafa Al-Husseini</h1>
                         <div class="decorative-line"></div>
                         <h2 class="text-md font-semibold text-gray-700">Plastic Injection Solutions Consultant</h2>
-                        <p class="text-sm text-gray-500">Mold Design | Injection Services | Technical Consulting</p>
+                        <p class="text-xs text-gray-500">Mold Design | Injection Services | Technical Consulting | Raw Material Sourcing</p>
                     </div>
                     <div class="text-xs text-gray-800 space-y-1 break-words">
                         <a href="mailto:smh180001@gmail.com" class="flex items-center hover:text-[#2c6b5b]">
@@ -138,6 +181,7 @@
 
     <script>
         const card = document.getElementById('card');
+        
         // Event listener for click/tap to toggle the flip state
         card.addEventListener('click', function() {
             card.classList.toggle('is-flipped');
@@ -150,9 +194,10 @@ VERSION:3.0
 FN:سید مصطفی الحسینی
 N:الحسینی;سید مصطفی;;;
 TITLE:مستشار حلول حقن البلاستيك
+ORG:Plastic Injection Solutions Consultant
+NOTE:تصمیم القوالب | خدمات الحقن | الاستشارات الفنیة | تأمین المواد الأولیة
 TEL;TYPE=CELL,VOICE;PREF=1:+989358125642
 EMAIL:smh180001@gmail.com
-ORG:Plastic Injection Solutions Consultant
 END:VCARD`;
             const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
             const url = URL.createObjectURL(blob);
@@ -166,4 +211,3 @@ END:VCARD`;
     </script>
 </body>
 </html>
-
